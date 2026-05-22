@@ -10,7 +10,7 @@ class Tool {
 }
 
 class Agent {
-  constructor(name, tools = [], prompt = "") {
+  constructor(name, tools = [], prompt = '') {
     this.name = name;
     this.tools = tools;
     this.prompt = prompt;
@@ -24,8 +24,8 @@ class Agent {
       const error = `Tool : ${task.toolName} non trouvé pour l'agent ${this.name}`;
       if (onProgress) {
         onProgress({
-          type: "log",
-          level: "error",
+          type: 'log',
+          level: 'error',
           message: error,
         });
       }
@@ -34,8 +34,8 @@ class Agent {
 
     if (onProgress) {
       onProgress({
-        type: "log",
-        level: "info",
+        type: 'log',
+        level: 'info',
         message: `Agent ${this.name} utilise l'outil : ${tool.name} `,
       });
     }
@@ -47,8 +47,8 @@ class Agent {
     } catch (error) {
       if (onProgress) {
         onProgress({
-          type: "log",
-          level: "error",
+          type: 'log',
+          level: 'error',
           message: `Erreur avec l'outil ${tool.name}: ${error.message}`,
         });
       }
