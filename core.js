@@ -56,3 +56,12 @@ class Agent {
     }
   }
 }
+
+class Task {
+  constructor(input, toolName) {
+    this.input = input;
+    this.toolName = toolName;
+  }
+}
+
+module.exports = { Tool, Agent, Task };
