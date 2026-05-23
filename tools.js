@@ -44,4 +44,14 @@ const fetchTool = new Tool('fetch', async (url) => {
     .trim();
 });
 
-module.exports = { lmStudioTool, fetchTool };
+const fileWriteTool = new Tool('writeFile', async ({ filename, content }) => {
+  console.log(`[WRITE FILE] Writing to: ${filename}`);
+  console.log(`[WRITE FILE] Content: ${content.substring(0, 100)}...`);
+
+  await fs.writeFile(filename, content, 'utf8');
+  const result = `File written: ${filename}`;
+  console.log(`[WRITE FILE] Result: ${result}`);
+  return result;
+});
+
+module.exports = { lmStudioTool, fetchTool, fileWriteTool };
