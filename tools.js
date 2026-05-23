@@ -4,6 +4,7 @@ const { Tool } = require('./core');
 
 const LM_API_URL = process.env.LM_API_URL;
 const LM_MODEL = process.env.LM_MODEL;
+const WEATHER_API_URL = process.env.WEATHER_API_URL;
 const WEATHER_API_KEY = process.env.WEATHER_API_KEY;
 
 if (!LM_API_URL || !LM_MODEL) {
@@ -54,4 +55,24 @@ const fileWriteTool = new Tool('writeFile', async ({ filename, content }) => {
   return result;
 });
 
-module.exports = { lmStudioTool, fetchTool, fileWriteTool };
+const weatherTool = new Tool('weather', async (city) => {
+  const url = `${WEATHER_API_URL}/current.json?key=${WEATHER_API_KEY}&q=${encodeURIComponent(city)}&aqi=no`;
+
+  console.log(`[WEATHER] Calling API for city: ${city}`);
+  console.log(`[WEATHER] API URL: ${url}`);
+  const response = await fetch(url);
+  const data = await response.json();
+  console.log(`[WEATHER] API response: ${JSON.stringify(data, null, 2)}`);
+
+  if (data.error) {
+    const errorMessage = `Weather API Error: ${data.error.message}`;
+    console.log(`[WEATHER] Error: ${errorMessage}`);
+    throw new Error(errorMessage);
+  }
+
+  const result = `Météo à ${data.location.name}: ${data.current.temp_c}°C, ${data.current.condition.text}. Ressenti: ${data.current.feelslike_c}°C, Humidité: ${data.current.humidity}%`;
+  console.log(`[WEATHER] Formatted result: ${result}`);
+  return result;
+});
+
+module.exports = { lmStudioTool, fetchTool, fileWriteTool, weatherTool };
