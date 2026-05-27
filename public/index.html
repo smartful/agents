@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crew of Agents Builder</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="sidebar" id="sidebar">
+        <h2>Crew of Agents Builder</h2>
+        <hr style="margin: 20px 0" />
+
+        <div class="form-group">
+          <button class="btn btn-primary" onclick="createBlock('agent')">➕ Ajouter Agent</button>
+          <button class="btn btn-primary" onclick="createBlock('task')">➕ Ajouter Tâche</button>
+        </div>
+
+        <hr style="margin: 20px 0" />
+
+        <div id="properties">
+          <p>Sélectionnez un bloc pour modifier ses propriétés</p>
+        </div>
+      </div>
+
+      <div class="canvas">
+        <div class="toolbar">
+          <button class="btn btn-primary" onclick="executeWorkflow()">🚀 Exécuter</button>
+          <button class="btn btn-secondary" onclick="clearCanvas()">🗑️ Effacer</button>
+          <button class="btn btn-secondary" onclick="saveWorkflow()">💾 Sauvegarder</button>
+          <button class="btn btn-secondary" onclick="loadWorkflow()">📁 Charger</button>
+          <button class="btn btn-secondary" onclick="toggleHelp()">❓ Aide</button>
+        </div>
+
+        <div class="workspace" id="workspace">
+          <svg
+            id="connections"
+            style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1"
+          ></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Help Panel -->
+    <div class="help-panel" id="helpPanel">
+      <div class="help-header">
+        <h3>📚 Guide d'utilisation</h3>
+        <button onclick="toggleHelp()" class="close-btn">✕</button>
+      </div>
+      <div class="help-content" id="helpContent">
+        <div class="loading">Chargement de la documentation...</div>
+      </div>
+    </div>
+
+    <div class="progress-container" id="progressContainer">
+      <h3>Exécution en cours...</h3>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div id="progressText">Initialisation...</div>
+    </div>
+
+    <div class="console collapsed" id="console">
+      <div class="console-header" onclick="toggleConsole()">
+        <span>🖥️ Console</span>
+        <span id="consoleToggle">▲</span>
+      </div>
+      <div class="console-content" id="consoleContent"></div>
+    </div>
+
+    <script></script>
+  </body>
+</html>
