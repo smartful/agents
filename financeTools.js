@@ -1,20 +1,21 @@
-require('dotenv').config();
-const fs = require('fs').promises;
-const path = require('path');
-const { Tool } = require('./core');
+import { writeFile, readFile, mkdir, appendFile } from 'node:fs/promises';
+import path = from 'node:path';
+import { Tool } from './core.js';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const ALPHA_VANTAGE_API_KEY = process.env.ALPHA_VANTAGE_API_KEY;
 const ALPHA_VANTAGE_API_URL = process.env.ALPHA_VANTAGE_API_URL;
 const CACHE_DIR = path.join(__dirname, 'cache');
 
 // Comprendre l'entreprise
-const companyOverviewTool = new Tool('companyOverview', async (symbol) => {
+export const companyOverviewTool = new Tool('companyOverview', async (symbol) => {
   if (!symbol) throw new Error('Le symbol de ticker est requit');
   const cacheFile = path.join(CACHE_DIR, `${symbol}-overview.json`);
 
   try {
-    await fs.mkdir(CACHE_DIR, { recursive: true });
-    const cached = await fs.readFile(cacheFile, 'utf8');
+    await mkdir(CACHE_DIR, { recursive: true });
+    const cached = await readFile(cacheFile, 'utf8');
     console.log(`[companyOverviewTool] ✅ Données récupéré depuis le cache pour ${symbol}`);
     return JSON.parse(cached);
   } catch (error) {
@@ -23,26 +24,26 @@ const companyOverviewTool = new Tool('companyOverview', async (symbol) => {
     const url = `${ALPHA_VANTAGE_API_URL}/query?function=OVERVIEW&symbol=${encodeURIComponent(symbol)}&apikey=${ALPHA_VANTAGE_API_KEY}`;
     const res = await fetch(url);
     const data = await res.json();
-    await fs.writeFile(cacheFile, JSON.stringify(data, null, 2), 'utf8');
+    await writeFile(cacheFile, JSON.stringify(data, null, 2), 'utf8');
     return data;
   }
 });
 
-const appendAnalysisTool = new Tool('appendAnalysis', async ({ ticker, analysisType, content }) => {
+export const appendAnalysisTool = new Tool('appendAnalysis', async ({ ticker, analysisType, content }) => {
   if (!ticker || !analysisType) throw new Error('ticker et analysisType requis');
   const filename = `analysis-${ticker.toLowerCase()}.md`;
   const section = `## ${analysisType}\n${content || ''}\n\n`;
-  await fs.appendFile(filename, section, 'utf8');
+  await appendFile(filename, section, 'utf8');
   return `Section "${analysisType}" ajoutée à ${filename}`;
 });
 
 // Etat financier - Compte de résultat
-const incomeStatementTool = new Tool('incomeStatement', async (symbol) => {
+export const incomeStatementTool = new Tool('incomeStatement', async (symbol) => {
   if (!symbol) throw new Error('Le symbol de ticker est requit');
   const cacheFile = path.join(CACHE_DIR, `${symbol}-incomeStatement.json`);
   try {
-    await fs.mkdir(CACHE_DIR, { recursive: true });
-    const cached = await fs.readFile(cacheFile, 'utf8');
+    await mkdir(CACHE_DIR, { recursive: true });
+    const cached = await readFile(cacheFile, 'utf8');
     console.log(`[incomeStatementTool] ✅ Données récupérées depuis le cache pour ${symbol}`);
     return JSON.parse(cached);
   } catch (err) {
@@ -51,18 +52,18 @@ const incomeStatementTool = new Tool('incomeStatement', async (symbol) => {
     const res = await fetch(url);
     const data = await res.json();
     const last3Quarters = Array.isArray(data.quarterlyReports) ? data.quarterlyReports.slice(0, 3) : [];
-    await fs.writeFile(cacheFile, JSON.stringify(last3Quarters, null, 2), 'utf8');
+    await writeFile(cacheFile, JSON.stringify(last3Quarters, null, 2), 'utf8');
     return last3Quarters;
   }
 });
 
 // Etat financier - Bilan
-const balanceSheetTool = new Tool('balanceSheet', async (symbol) => {
+export const balanceSheetTool = new Tool('balanceSheet', async (symbol) => {
   if (!symbol) throw new Error('Le symbol de ticker est requit');
   const cacheFile = path.join(CACHE_DIR, `${symbol}-balanceSheet.json`);
   try {
-    await fs.mkdir(CACHE_DIR, { recursive: true });
-    const cached = await fs.readFile(cacheFile, 'utf8');
+    await mkdir(CACHE_DIR, { recursive: true });
+    const cached = await readFile(cacheFile, 'utf8');
     console.log(`[balanceSheetTool] ✅ Données récupérées depuis le cache pour ${symbol}`);
     return JSON.parse(cached);
   } catch (err) {
@@ -71,18 +72,18 @@ const balanceSheetTool = new Tool('balanceSheet', async (symbol) => {
     const res = await fetch(url);
     const data = await res.json();
     const last3Quarters = Array.isArray(data.quarterlyReports) ? data.quarterlyReports.slice(0, 3) : [];
-    await fs.writeFile(cacheFile, JSON.stringify(last3Quarters, null, 2), 'utf8');
+    await writeFile(cacheFile, JSON.stringify(last3Quarters, null, 2), 'utf8');
     return last3Quarters;
   }
 });
 
 // Récupérer les résultats financiers (earnings)
-const earningTool = new Tool('earning', async (symbol) => {
+export const earningTool = new Tool('earning', async (symbol) => {
   if (!symbol) throw new Error('Le symbol de ticker est requit');
   const cacheFile = path.join(CACHE_DIR, `${symbol}-earning.json`);
   try {
-    await fs.mkdir(CACHE_DIR, { recursive: true });
-    const cached = await fs.readFile(cacheFile, 'utf8');
+    await mkdir(CACHE_DIR, { recursive: true });
+    const cached = await readFile(cacheFile, 'utf8');
     console.log(`[earningTool] ✅ Données récupérées depuis le cache pour ${symbol}`);
     return JSON.parse(cached);
   } catch (err) {
@@ -91,16 +92,16 @@ const earningTool = new Tool('earning', async (symbol) => {
     const res = await fetch(url);
     const data = await res.json();
     const last3Quarters = Array.isArray(data.quarterlyEarnings) ? data.quarterlyEarnings.slice(0, 3) : [];
-    await fs.writeFile(cacheFile, JSON.stringify(last3Quarters, null, 2), 'utf8');
+    await writeFile(cacheFile, JSON.stringify(last3Quarters, null, 2), 'utf8');
     return last3Quarters;
   }
 });
 
-const getAnalysisFileTool = new Tool('getAnalysisFile', async (ticker) => {
+export const getAnalysisFileTool = new Tool('getAnalysisFile', async (ticker) => {
   if (!ticker) throw new Error('Le symbol de ticker est requit');
   const filename = `analysis-${ticker.toLowerCase()}.md`;
   try {
-    const content = await fs.readFile(filename, 'utf8');
+    const content = await readFile(filename, 'utf8');
     return content;
   } catch (err) {
     throw new Error(`Impossible de lire le fichier d'analyse : ${filename}`);
@@ -108,12 +109,12 @@ const getAnalysisFileTool = new Tool('getAnalysisFile', async (ticker) => {
 });
 
 // Récupérer les actualités et sentiment pour une société
-const newsSentimentTool = new Tool('newsSentiment', async (symbol) => {
+export const newsSentimentTool = new Tool('newsSentiment', async (symbol) => {
   if (!symbol) throw new Error('Le symbol de ticker est requit');
   const cacheFile = path.join(CACHE_DIR, `${symbol}-news.json`);
   try {
-    await fs.mkdir(CACHE_DIR, { recursive: true });
-    const cached = await fs.readFile(cacheFile, 'utf8');
+    await mkdir(CACHE_DIR, { recursive: true });
+    const cached = await readFile(cacheFile, 'utf8');
     console.log(`[newsSentimentTool] ✅ Données récupérées depuis le cache pour ${symbol}`);
     return JSON.parse(cached);
   } catch (err) {
@@ -130,17 +131,7 @@ const newsSentimentTool = new Tool('newsSentiment', async (symbol) => {
         }))
       : [];
 
-    await fs.writeFile(cacheFile, JSON.stringify(newsItems, null, 2), 'utf8');
+    await writeFile(cacheFile, JSON.stringify(newsItems, null, 2), 'utf8');
     return newsItems;
   }
 });
-
-module.exports = {
-  companyOverviewTool,
-  appendAnalysisTool,
-  incomeStatementTool,
-  balanceSheetTool,
-  earningTool,
-  getAnalysisFileTool,
-  newsSentimentTool,
-};

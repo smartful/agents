@@ -1,4 +1,4 @@
-class Tool {
+export class Tool {
   constructor(name, func) {
     this.name = name;
     this.func = func;
@@ -9,7 +9,7 @@ class Tool {
   }
 }
 
-class Agent {
+export class Agent {
   constructor(name, tools = [], prompt = '') {
     this.name = name;
     this.tools = tools;
@@ -57,11 +57,9 @@ class Agent {
   }
 }
 
-class Task {
+export class Task {
   constructor(input, toolName) {
     this.input = input;
     this.toolName = toolName;
   }
 }
-
-module.exports = { Tool, Agent, Task };
