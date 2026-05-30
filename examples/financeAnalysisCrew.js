@@ -1,7 +1,10 @@
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import dotenv from 'dotenv';
-dotenv.config();
-import { Tool, Agent, Task } from '../core';
-import { lmStudioTool } from '../tools';
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.join(__dirname, '..', '.env') });
+import { Tool, Agent, Task } from '../core.js';
+import { lmStudioTool } from '../tools.js';
 import {
   companyOverviewTool,
   appendAnalysisTool,
@@ -10,10 +13,10 @@ import {
   earningTool,
   getAnalysisFileTool,
   newsSentimentTool,
-} from '../financeTools';
+} from '../financeTools.js';
 
 // --- GLOBAL CONFIG ---
-const TICKER = process.env.TICKER; // AAPL, IBM, MSFT, META, AMZN, TSLA, AMD
+const TICKER = process.env.FINANCE_TICKER; // AAPL, IBM, MSFT, META, AMZN, TSLA, AMD
 const VERBOSE = false;
 
 // --- AGENTS ---
