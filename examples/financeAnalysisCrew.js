@@ -1,7 +1,8 @@
-require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
-const { Tool, Agent, Task } = require('../core');
-const { lmStudioTool } = require('../tools');
-const {
+import dotenv from 'dotenv';
+dotenv.config();
+import { Tool, Agent, Task } from '../core';
+import { lmStudioTool } from '../tools';
+import {
   companyOverviewTool,
   appendAnalysisTool,
   incomeStatementTool,
@@ -9,10 +10,10 @@ const {
   earningTool,
   getAnalysisFileTool,
   newsSentimentTool,
-} = require('../financeTools');
+} from '../financeTools';
 
 // --- GLOBAL CONFIG ---
-const TICKER = 'AMD'; // AAPL, IBM, MSFT, META, AMZN, TSLA, AMD
+const TICKER = process.env.TICKER; // AAPL, IBM, MSFT, META, AMZN, TSLA, AMD
 const VERBOSE = false;
 
 // --- AGENTS ---

@@ -1,9 +1,14 @@
-require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
-const { Tool, Agent, Task } = require('../core');
-const { weatherTool, lmStudioTool } = require('../tools');
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import dotenv from 'dotenv';
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.join(__dirname, '..', '.env') });
 
-const CITY = 'Paris';
-const VERBOSE = 'false';
+import { Tool, Agent, Task } from '../core.js';
+import { weatherTool, lmStudioTool } from '../tools.js';
+
+const CITY = process.env.WEATHER_CITY;
+const VERBOSE = process.env.VERBOSE;
 
 // Agents
 const weatherFetcher = new Agent('WeatherFetcher', [weatherTool]);
@@ -37,7 +42,7 @@ class Crew {
       const toolName = tasks[i].toolName;
       const percent = Math.round(((i + 1) / tasks.length) * 100);
 
-      console.log(`Etape ${i + 1}/${tasks.length} (${percent}%) | Agent: ${agent.name} | Tool: ${toolName}`);
+      console.log(`⚙️ Étape ${i + 1}/${tasks.length} (${percent}%) | Agent: ${agent.name} | Tool: ${toolName}`);
       if (toolName === 'lmStudio' && i > 0 && lastResult) {
         tasks[i].input = `${tasks[i].input}\n\nDonnées Météo : ${lastResult}`;
       }

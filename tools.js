@@ -1,7 +1,11 @@
 import dotenv from 'dotenv';
-dotenv.config();
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { writeFile } from 'node:fs/promises';
 import { Tool } from './core.js';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.join(__dirname, '.env') });
 
 const LM_API_URL = process.env.LM_API_URL;
 const LM_MODEL = process.env.LM_MODEL;

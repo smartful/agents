@@ -1,8 +1,11 @@
 import { writeFile, readFile, mkdir, appendFile } from 'node:fs/promises';
-import path = from 'node:path';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { Tool } from './core.js';
 import dotenv from 'dotenv';
-dotenv.config();
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.join(__dirname, '.env') });
 
 const ALPHA_VANTAGE_API_KEY = process.env.ALPHA_VANTAGE_API_KEY;
 const ALPHA_VANTAGE_API_URL = process.env.ALPHA_VANTAGE_API_URL;
